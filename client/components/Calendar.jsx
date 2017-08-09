@@ -7,6 +7,9 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/material_green.css';
 import 'flatpickr/dist/l10n/no.js';
 
+import { apiUrl } from '../lib/state';
+import { makeApi } from '../lib/utils';
+
 export default class Calendar extends React.Component {
   constructor(props) {
     super(props);
@@ -20,23 +23,16 @@ export default class Calendar extends React.Component {
   componentDidMount() {
     axios
       .get(
-        'http://localhost:8100/api.php/tbl_rooms?filter=start_date,bt,2016-01-01,2016-02-01',
+        `${apiUrl}/tbl_rooms?filter=start_date,bt,2016-01-01,2016-02-01`,
       )
-      .then(res => {
-        let temp = res.data.tbl_rooms.records;
-        let dates = [];
+      .then(makeApi)
+      .then(api => {
+        // Group room-bookings by dates
+        const dates = api.rows.reduce((acc, cur) => {
+          acc[cur.start_date] ? acc[cur.start_date].push(cur) : acc[cur.start_date] = [cur];
+          return acc;
+        }, {})
 
-        for (var i = 0; i < temp.length; i++) {
-          let room = temp[i];
-          let id = room[0];
-          let date = room[2];
-          let service_id = room[4];
-          let time = room[5];
-          if (!dates[date]) {
-            dates[date] = [];
-          }
-          dates[date].push({id, service_id, time});
-        }
         this.setState({dates});
       });
   }
@@ -52,23 +48,12 @@ export default class Calendar extends React.Component {
           options={{
             clickOpens: false,
             dateFormat: 'Y-m-d',
-            defaultDate: '2016-01-01',
+            defaultDate: '2016-01-09',
             enable: [
-              date => {
-                let dates = this.state.dates;
-                let m = moment(date).format('YYYY-MM-DD');
-
-                if (!dates[m]) return false;
-                return true;
-                // Sort by active service
-                for (var i = 0; i < dates.length; i++) {
-                  let d = dates[i];
-                  return d.serviceId == this.state.serviceId;
-                }
-              },
+              date => this.state.dates[moment(date).format('YYYY-MM-DD')]
             ],
             inline: true,
-            locale: 'no',
+            //locale: 'no',
           }}
           onChange={this.changeDate}
         />

@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 
+import { apiUrl } from '../lib/state';
+import { makeApi } from '../lib/utils';
+
 export default class Services extends React.Component {
   constructor(props) {
     super(props);
@@ -12,19 +15,14 @@ export default class Services extends React.Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:8100/api.php/tbl_services?filter=location_id,eq,7')
-      .then(res => {
-        let temp = res.data.tbl_services.records;
+      .get(`${apiUrl}/tbl_services?filter=location_id,eq,7`)
+      .then(makeApi)
+      .then(api => {
 
-        let services = [];
-        for (var i = 0; i < temp.length; i++) {
-          let service = temp[i];
-          let id = service[0];
-          if (i > 3) break;
-          services[id] = service;
-          services[id]['rooms'] = [];
-        }
-        this.setState({services});
+        console.log(api.columns)
+        console.log(api.rows)
+
+        //this.setState({services});
       });
   }
 
