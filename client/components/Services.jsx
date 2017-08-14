@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { apiUrl } from '../lib/state';
+import { apiUrl } from '../config.json';
 import { makeApi } from '../lib/utils';
 
 export default class Services extends React.Component {
