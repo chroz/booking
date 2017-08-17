@@ -1,3 +1,3 @@
 import { createActions } from "../state/RxState";
 
-export default createActions(["fetchBookings", "selectDate", "reset"]);
+export default createActions(["selectDate", "reset"]);

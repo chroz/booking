@@ -23,7 +23,13 @@ export function createState(reducer$, initialState$ = Rx.Observable.of({})) {
     .refCount();
 }
 
-export function connect({selector = (state) => state, actionSubjects}) {
+export function makeSelector(...componentKeys) {
+  return componentKeys.length ?
+    (state) => state :
+    (state) => componentKeys.reduce((acc, key) => ({ ...acc, [key]: state[key] }), {});
+}
+
+export function connect(selector = (state) => state, actionSubjects) {
   const actions = Object.keys(actionSubjects)
     .reduce((acc, key) => ({ ...acc, [key]: value => actionSubjects[key].next(value) }), {});
 

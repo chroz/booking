@@ -1,6 +1,5 @@
 import React from 'react';
-import Services from './Services.jsx';
-import Calendar from './Calendar.jsx';
+import Booking from './Booking.jsx';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -11,7 +10,7 @@ export default class App extends React.Component {
     return (
       <div style={{textAlign: 'center'}}>
         <h1>Book me</h1>
-        <Calendar />
+        <Booking />
       </div>
     );
   }
