@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from 'moment';
 import PropTypes from "prop-types";
 import { connect } from "../state/RxState";
 import calendarActions from "../actions/calendarActions";
@@ -15,9 +16,10 @@ export const Calendar = ({ state, selectDate, reset }) => (
       options={{
         clickOpens: false,
         dateFormat: 'Y-m-d',
-        // enable: [
-        //   date => fetchbookings.dates[moment(date).format('YYYY-MM-DD')]
-        // ],
+        defaultDate: state.dateStr,
+        enable: [
+          date => state.bookings[moment(date).format('YYYY-MM-DD')]
+        ],
         inline: true,
         //locale: 'no',
       }}
@@ -30,6 +32,7 @@ export const Calendar = ({ state, selectDate, reset }) => (
 
 Calendar.propTypes = {
   state: PropTypes.object.isRequired,
+  fetchBookings: PropTypes.func.isRequired,
   selectDate: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
 };
