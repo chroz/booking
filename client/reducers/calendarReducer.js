@@ -43,11 +43,7 @@ const calendarReducer$ = Rx.Observable.of(() => initialState)
         dateStr: moment(date).format('YYYY-MM-DD'),
       };
     }),
-    calendarActions.reset.map(() => state => ({
-        ...state,
-        dateObj: date,
-        dateStr: moment(date).format('YYYY-MM-DD'),
-      })
+    calendarActions.reset.map(() => state => initialState)
   );
 
 export default calendarReducer$;
